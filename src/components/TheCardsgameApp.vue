@@ -4,34 +4,41 @@
         <div v-for="card in cards"
           :class="{card:true, isflipped: card.isFlipped, isSolved: card.isSolved}"
           :key="card.id"
-          @click="flipCard(card, $event)"
+          @click="flipCard(card, this)"
+          @success="playSoundSuccess"
           >
-          <transition name="flip" mode="out-in">
             <div class="cardface" v-if="card.isFlipped" key="front">
               {{ card.picture }}
             </div>
             <div v-else key="back">
-              <img src="cardback-small.webp" class="cardback" alt="">
+              <img src="@/assets/cardback-small.webp" class="cardback" alt="">
             </div>
-          </transition>
-
-
         </div>
       </div>
   </div>
 </template>
 
 <script>
+/* eslint-disable */
 import {getCards, cardFlipper} from './cards'
 
 export default {
   name: 'TheCardsgameApp',
   props: {
   },
-  setup(props) {
-    console.log(props)
+  emits : ['success'],
+
+  setup(props, { emit }) {
     let cards = getCards(40);
-    return {cards, flipCard: cardFlipper()}
+    var audio = new Audio(require('@/assets/success-sound-effect.mp3'))
+    audio.volume = 0.3;
+
+    function playSoundSuccess() {
+      audio.currentTime=0
+      audio.play()
+    }
+
+    return {cards, flipCard: cardFlipper(), playSoundSuccess}
   },
 }
 </script>
@@ -65,7 +72,7 @@ export default {
 
 .card {
   /* border: 1px solid rgb(68, 68, 68); */
-  box-shadow: 12px 10px 8px 4px rgb(194, 194, 194);
+  box-shadow: 4px 4px 8px 2px rgb(194, 194, 194);
 }
 
 .cardback {

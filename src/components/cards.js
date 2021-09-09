@@ -62,7 +62,8 @@ function shuffle(array) {
 export function cardFlipper() {
     let flippedCards = [];
 
-    return function flipCard(card) {
+    return function flipCard(card, vueApp) {
+        console.log(vueApp)
         // if card has been solved do nothing
         if (card.isSolved || flippedCards.length == 1 && flippedCards[0].id == card.id) {
             return;
@@ -86,6 +87,7 @@ export function cardFlipper() {
                 previous.isSolved = true
                 card.isSolved = true
                 flippedCards = []
+                vueApp.playSoundSuccess()
             }
         }
 
